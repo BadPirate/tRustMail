@@ -1,0 +1,33 @@
+# Example configuration for MailSender
+# Copy this file to config.yaml and adjust as needed
+
+domains:
+  - domain: example.com
+    from_addresses:
+      - noreply@example.com
+      - support@example.com
+      # Use "*" to allow any address from this domain
+      # - "*"
+    dkim_selector: default
+  
+  - domain: anotherdomain.com
+    from_addresses:
+      - hello@anotherdomain.com
+    dkim_selector: mail
+
+smtp:
+  hostname: smtp.example.com  # SMTP server to use for sending
+  port: 25                    # SMTP port (usually 25, 465, or 587)
+  username: ~                 # Optional SMTP username (omit or use ~ for none)
+  password: ~                 # Optional SMTP password (omit or use ~ for none)
+  max_connections: 5          # Maximum number of SMTP connections
+
+rate_limits:
+  emails_per_minute: 60
+  emails_per_hour: 1000
+  emails_per_day: 10000
+
+retries:
+  max_retries: 3
+  initial_backoff_seconds: 60     # Wait 60 seconds before first retry
+  max_backoff_seconds: 3600       # Maximum wait of 1 hour between retries

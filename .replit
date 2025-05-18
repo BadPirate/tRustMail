@@ -1,0 +1,29 @@
+modules = ["rust"]
+
+[nix]
+channel = "stable-24_05"
+packages = ["openssl", "pkg-config"]
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Rust Email Service"
+
+[[workflows.workflow]]
+name = "Rust Email Service"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cargo build && cargo run"
+waitForPort = 8000
+
+[deployment]
+run = ["sh", "-c", "cargo build && cargo run"]
