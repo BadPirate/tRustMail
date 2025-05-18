@@ -43,7 +43,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     info!("API server listening on {}", addr);
 
     let app = setup_api(pool, config);
-    axum::serve(listener, app).await?;
+    axum::Server::from_tcp(listener)?
+        .serve(app.into_make_service())
+        .await?;
 
     Ok(())
 }

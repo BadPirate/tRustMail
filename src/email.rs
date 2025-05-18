@@ -5,8 +5,8 @@ use chrono::{DateTime, Duration, Utc};
 use lettre::{
     message::{header::ContentType, Mailbox, MessageBuilder},
     transport::smtp::{
-        authentication::Credentials, client::TlsParameters, extension::ClientId,
-        AsyncSmtpTransport, Tls,
+        authentication::Credentials, client::TlsParameters,
+        AsyncSmtpTransport,
     },
     AsyncTransport, Message,
 };
@@ -35,8 +35,7 @@ impl EmailSender {
 
         transport_builder = transport_builder
             .port(config.smtp.port)
-            .tls(Tls::Required(TlsParameters::new(config.smtp.hostname.clone()).unwrap()))
-            .client_id(ClientId::Domain(config.smtp.hostname.clone()));
+            .tls(TlsParameters::new(config.smtp.hostname.clone()).unwrap());
 
         Self {
             pool,
@@ -158,13 +157,10 @@ impl EmailSender {
             .subject(&email.subject)
             .date_now();
         
-        // Add plain text body
-        builder = builder.body(email.body_text.clone());
+        // Create the message based on content type
+        let message: Message;
         
-        // Create the basic message
-        let mut message: Message;
-        
-        // Set HTML body if provided
+        // Set appropriate content type and body
         if let Some(html) = &email.body_html {
             message = builder
                 .header(ContentType::TEXT_HTML)
