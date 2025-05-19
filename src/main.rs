@@ -39,11 +39,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Start API server
     let addr = SocketAddr::from(([0, 0, 0, 0], 8000));
-    let listener = TcpListener::bind(addr).await?;
     info!("API server listening on {}", addr);
 
     let app = setup_api(pool, config);
-    axum::Server::from_tcp(listener)?
+    
+    // Using the current axum approach for binding to the listener
+    axum::Server::bind(&addr)
         .serve(app.into_make_service())
         .await?;
 

@@ -6,6 +6,7 @@ use rand_core::OsRng;
 use sqlx::PgPool;
 use std::error::Error;
 use tracing::info;
+use sha2::{Sha256, Digest};
 
 // DKIM signing functions
 pub async fn sign_email_with_dkim(
@@ -33,7 +34,14 @@ pub async fn sign_email_with_dkim(
         domain_config.domain,
         domain_config.dkim_selector,
         chrono::Utc::now().timestamp(),
-        base64::encode(sha256::digest(&email_bytes.as_ref())),
+        {
+            // Use sha2 library to create a SHA-256 hash
+            let mut hasher = Sha256::new();
+            // Directly use the bytes from the email content
+            let bytes: &[u8] = email_bytes.as_ref();
+            hasher.update(bytes);
+            base64::encode(hasher.finalize())
+        },
         base64::encode(keypair.sign(&email_bytes).to_bytes())
     );
     
@@ -71,7 +79,7 @@ pub async fn get_domain_key(
     let public_key_str = base64::encode(keypair.public.as_bytes());
     
     // Store in database
-    let key_id = db::store_domain_key(pool, domain, selector, &private_key_b64, &public_key_str).await?;
+    let _key_id = db::store_domain_key(pool, domain, selector, &private_key_b64, &public_key_str).await?;
     
     // Fetch the stored key
     let key = db::get_domain_key(pool, domain, selector)

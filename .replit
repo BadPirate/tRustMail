@@ -1,4 +1,4 @@
-modules = ["rust"]
+modules = ["rust", "postgresql-16"]
 
 [nix]
 channel = "stable-24_05"

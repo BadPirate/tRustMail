@@ -1,5 +1,11 @@
--- Create email_status enum type
-CREATE TYPE email_status AS ENUM ('pending', 'sending', 'sent', 'failed');
+-- Create email_status enum type if it doesn't exist
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'email_status') THEN
+        CREATE TYPE email_status AS ENUM ('pending', 'sending', 'sent', 'failed');
+    END IF;
+END
+$$;
 
 -- Create emails table
 CREATE TABLE IF NOT EXISTS emails (

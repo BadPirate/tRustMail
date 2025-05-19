@@ -1,0 +1,1 @@
+/home/runner/workspace/target/debug/mailsender: /home/runner/workspace/src/api.rs /home/runner/workspace/src/auth.rs /home/runner/workspace/src/config.rs /home/runner/workspace/src/db.rs /home/runner/workspace/src/email.rs /home/runner/workspace/src/main.rs /home/runner/workspace/src/migrations/20230101000000_initial.sql

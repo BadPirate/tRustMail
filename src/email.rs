@@ -33,9 +33,12 @@ impl EmailSender {
                 .unwrap()
         };
 
+        // Import the Tls enum from lettre
+        use lettre::transport::smtp::client::Tls;
+        
         transport_builder = transport_builder
             .port(config.smtp.port)
-            .tls(TlsParameters::new(config.smtp.hostname.clone()).unwrap());
+            .tls(Tls::Required(TlsParameters::new(config.smtp.hostname.clone()).unwrap()));
 
         Self {
             pool,
@@ -158,7 +161,7 @@ impl EmailSender {
             .date_now();
         
         // Create the message based on content type
-        let message: Message;
+        let mut message: Message;
         
         // Set appropriate content type and body
         if let Some(html) = &email.body_html {

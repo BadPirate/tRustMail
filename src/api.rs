@@ -1,4 +1,5 @@
 use crate::config::Config;
+use crate::db;
 use crate::email::EmailSender;
 use axum::{
     extract::{Path, State},
@@ -102,11 +103,17 @@ async fn get_email_status(
     info!("Checking status for email: {}", id);
 
     // Query the email from the database
-    let email = sqlx::query!(
+    let email = sqlx::query_as!(
+        db::EmailRecord,
         r#"
         SELECT 
             id, 
-            status, 
+            from_email,
+            to_email,
+            subject,
+            body_text,
+            body_html,
+            status as "status: db::EmailStatus", 
             created_at, 
             updated_at, 
             sent_at, 
