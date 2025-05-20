@@ -1,0 +1,23 @@
+{
+  "query": "\n        SELECT COUNT(*) as count\n        FROM emails\n        WHERE (from_email = $1 OR from_email LIKE $2)\n        AND created_at >= $3\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "count",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text",
+        "Timestamptz"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "7d219528293e5559a18c64767226e7a32ecdbc710215b0ba859fcac27e94f9c1"
+}

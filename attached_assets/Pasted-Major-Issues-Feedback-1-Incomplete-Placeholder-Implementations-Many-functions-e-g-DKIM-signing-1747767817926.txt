@@ -1,0 +1,34 @@
+Major Issues & Feedback
+1. Incomplete/Placeholder Implementations
+Many functions (e.g., DKIM signing, some DB queries, error handling) are marked as TODO or have placeholder code ({…}), which means critical functionality is missing or not robust.
+Example: DKIM header is not actually inserted into outgoing emails.
+2. Error Handling
+Error handling is inconsistent and sometimes missing. For example, in API handlers, errors are not always mapped to proper HTTP responses.
+Some error branches are left as {…} or return empty tuples, which will panic or cause runtime errors.
+3. Security Concerns
+DKIM Key Storage: Private keys are stored in the database as base64 strings. Ensure the database is encrypted and access is tightly controlled.
+Input Validation: Email addresses and other user inputs are not thoroughly validated or sanitized, which could lead to injection or abuse.
+Rate Limiting: Rate limiting is implemented, but the actual enforcement logic is incomplete ({…} in checks).
+Sensitive Data in Logs: Logging email addresses and possibly other sensitive info without redaction.
+4. Architectural Design
+Separation of Concerns: The code is modular (API, DB, Email, Auth, Config), which is good. However, some logic (e.g., email validation, error mapping) is duplicated or scattered.
+State Management: Uses Arc<AppState> for sharing state, which is idiomatic for Axum.
+Async/Await: Uses async Rust throughout, which is good for scalability.
+5. Database Layer
+Many DB functions are incomplete or missing SQL queries.
+No migrations or schema validation shown (though a migrations folder exists).
+6. Testing
+Only config parsing is tested. No integration or unit tests for API, DB, or email logic.
+7. Other Observations
+DKIM/Email Security: DKIM is not actually applied to outgoing emails, which is a critical feature for a mail sender.
+No Authentication: The API is open, with no authentication or authorization checks, making it vulnerable to abuse.
+No TLS/HTTPS: No mention of HTTPS for the API server.
+Recommendations
+Complete All TODOs: Implement all missing logic, especially for DKIM, DB queries, and error handling.
+Input Validation: Add strict validation for all user inputs, especially email addresses.
+API Security: Add authentication (e.g., API keys, OAuth) and consider rate limiting at the API layer.
+Sensitive Data: Avoid logging sensitive data or redact it.
+Testing: Add comprehensive tests for all modules.
+DKIM Implementation: Properly sign outgoing emails and insert DKIM headers.
+Error Handling: Standardize error handling and always return meaningful HTTP responses.
+Documentation: Add API documentation and usage examples.

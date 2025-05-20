@@ -1,0 +1,106 @@
+{
+  "query": "\n        SELECT \n            id, from_email, to_email, subject, body_html, body_text,\n            status as \"status: EmailStatus\", created_at, updated_at, sent_at,\n            retry_count, next_retry_at, error_message\n        FROM emails\n        WHERE status = 'pending' AND (next_retry_at IS NULL OR next_retry_at <= $1)\n        ORDER BY created_at ASC\n        LIMIT $2\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "from_email",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "to_email",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "subject",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "body_html",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "body_text",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "status: EmailStatus",
+        "type_info": {
+          "Custom": {
+            "name": "email_status",
+            "kind": {
+              "Enum": [
+                "pending",
+                "sending",
+                "sent",
+                "failed"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "ordinal": 7,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 8,
+        "name": "updated_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 9,
+        "name": "sent_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 10,
+        "name": "retry_count",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 11,
+        "name": "next_retry_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 12,
+        "name": "error_message",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Timestamptz",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      true
+    ]
+  },
+  "hash": "8d8d4cfc5e9eef94a6092e4ee342f9327122aa13a8ee8870458d3d4a5dc942a1"
+}

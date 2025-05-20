@@ -1,5 +1,23 @@
 # Configuration for MailSender
 
+# API Authentication
+api:
+  port: 8000                            # API server port
+  api_keys:                             # List of valid API keys for authentication
+    - key: "sk_mailsender_test_key123"
+      name: "Development Key"
+  tls:
+    enabled: false                      # Set to true to enable HTTPS
+    cert_path: ~                        # Path to TLS certificate
+    key_path: ~                         # Path to TLS private key
+
+# SMTP Listener (for receiving emails via SMTP protocol)
+smtp_listener:
+  enabled: true
+  port: 25                              # Standard SMTP port
+  require_auth: true                    # Require authentication for sending
+  tls_enabled: false                    # Enable TLS for SMTP connections
+
 domains:
   - domain: example.com
     from_addresses:
@@ -10,18 +28,20 @@ domains:
     dkim_selector: default
 
 smtp:
-  hostname: mail.example.com  # SMTP server to use for sending
-  port: 587                   # SMTP port (usually 25, 465, or 587)
-  username: ~                 # Optional SMTP username (omit or use ~ for none)
-  password: ~                 # Optional SMTP password (omit or use ~ for none)
-  max_connections: 5          # Maximum number of SMTP connections
+  hostname: mail.example.com            # SMTP server to use for sending
+  port: 587                             # SMTP port (usually 25, 465, or 587)
+  username: ~                           # Optional SMTP username (omit or use ~ for none)
+  password: ~                           # Optional SMTP password (omit or use ~ for none)
+  max_connections: 5                    # Maximum number of SMTP connections
 
 rate_limits:
   emails_per_minute: 60
   emails_per_hour: 1000
   emails_per_day: 10000
+  enabled: true                         # Enable/disable rate limiting
 
 retries:
   max_retries: 3
-  initial_backoff_seconds: 60     # Wait 60 seconds before first retry
-  max_backoff_seconds: 3600       # Maximum wait of 1 hour between retries
+  initial_backoff_seconds: 60           # Wait 60 seconds before first retry
+  max_backoff_seconds: 3600             # Maximum wait of 1 hour between retries
+  enabled: true                         # Enable/disable retry mechanism

@@ -1,0 +1,52 @@
+{
+  "query": "\n        SELECT id, domain, selector, private_key, public_key, created_at\n        FROM domain_keys\n        WHERE domain = $1 AND selector = $2\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "domain",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "selector",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "private_key",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "public_key",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "0b97ba4682a2b1457cb85932dff21e14b5b3d9d88cf3a2f3837987a4c24a4905"
+}
