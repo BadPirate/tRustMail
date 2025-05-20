@@ -108,6 +108,7 @@ impl EmailSender {
         Ok(())
     }
 
+    #[allow(dead_code)]
     pub async fn process_email_queue(&self) -> Result<usize, Box<dyn Error>> {
         let batch_size = 50;
         let pending_emails = db::get_pending_emails(&self.pool, batch_size).await?;
@@ -146,6 +147,7 @@ impl EmailSender {
         Ok(sent_count)
     }
 
+    #[allow(dead_code)]
     async fn send_queued_email(&self, email: &db::EmailRecord) -> Result<(), Box<dyn Error>> {
         // Mark as sending
         db::update_email_status(&self.pool, email.id, EmailStatus::Sending, None).await?;
@@ -192,6 +194,7 @@ impl EmailSender {
     }
 }
 
+#[allow(dead_code)]
 fn calculate_next_retry(retry_config: &RetryConfig, current_retry: u32) -> DateTime<Utc> {
     let now = Utc::now();
     let base_seconds = retry_config.initial_backoff_seconds as i64;

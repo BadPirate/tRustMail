@@ -124,6 +124,7 @@ pub async fn update_email_status(
     Ok(())
 }
 
+#[allow(dead_code)]
 pub async fn get_pending_emails(pool: &PgPool, limit: i64) -> Result<Vec<EmailRecord>, sqlx::Error> {
     let now = Utc::now();
     
@@ -148,6 +149,7 @@ pub async fn get_pending_emails(pool: &PgPool, limit: i64) -> Result<Vec<EmailRe
     Ok(records)
 }
 
+#[allow(dead_code)]
 pub async fn increment_retry_count(
     pool: &PgPool,
     email_id: Uuid,
