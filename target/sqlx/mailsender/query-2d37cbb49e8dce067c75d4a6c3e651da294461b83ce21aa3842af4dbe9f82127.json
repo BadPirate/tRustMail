@@ -1,0 +1,28 @@
+{
+  "query": "\n        INSERT INTO emails (\n            id, from_email, to_email, subject, body_text, body_html,\n            status, created_at, updated_at, retry_count\n        )\n        VALUES ($1, $2, $3, $4, $5, $6, 'pending', $7, $8, 0)\n        RETURNING id\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Varchar",
+        "Varchar",
+        "Text",
+        "Text",
+        "Text",
+        "Timestamptz",
+        "Timestamptz"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "e6a30816af5864341086b0f92b305aa9d41a9f5f91bf21a89a62e8c7129b0cd9"
+}

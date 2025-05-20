@@ -29,5 +29,9 @@ waitForPort = 8000
 run = ["sh", "-c", "cargo build && cargo run"]
 
 [[ports]]
+localPort = 25
+externalPort = 3000
+
+[[ports]]
 localPort = 8000
 externalPort = 80

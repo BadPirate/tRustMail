@@ -15,6 +15,18 @@ use std::error::Error;
 use tracing::{error, info, warn};
 use uuid::Uuid;
 
+// Email data structure (used both in API and SMTP listener)
+#[derive(Debug, Clone)]
+pub struct Email {
+    pub id: Uuid,
+    pub from_email: String,
+    pub to_email: String,
+    pub subject: String,
+    pub body_text: String,
+    pub body_html: Option<String>,
+}
+
+#[derive(Clone)]
 pub struct EmailSender {
     pool: PgPool,
     config: Config,

@@ -1,0 +1,24 @@
+{
+  "query": "\n        UPDATE emails\n        SET retry_count = retry_count + 1,\n            next_retry_at = $1,\n            updated_at = $2,\n            error_message = $3\n        WHERE id = $4\n        RETURNING retry_count\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "retry_count",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Timestamptz",
+        "Timestamptz",
+        "Text",
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "7f3779f90f56744178f48af43de456afe22ab7d8c271f8cfe9baedc62da5b93a"
+}

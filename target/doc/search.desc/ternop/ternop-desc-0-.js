@@ -1,0 +1,1 @@
+searchState.loadedDescShard("ternop", 0, "A dead simple ternary operator macro which allows you to …")

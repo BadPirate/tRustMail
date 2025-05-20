@@ -10,6 +10,8 @@ pub struct Config {
     pub smtp: SmtpConfig,
     pub rate_limits: RateLimitConfig,
     pub retries: RetryConfig,
+    pub api: ApiConfig,
+    pub smtp_listener: SmtpListenerConfig,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -33,6 +35,8 @@ pub struct RateLimitConfig {
     pub emails_per_minute: u32,
     pub emails_per_hour: u32,
     pub emails_per_day: u32,
+    #[serde(default = "default_true")]
+    pub enabled: bool,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -40,6 +44,55 @@ pub struct RetryConfig {
     pub max_retries: u32,
     pub initial_backoff_seconds: u32,
     pub max_backoff_seconds: u32,
+    #[serde(default = "default_true")]
+    pub enabled: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ApiConfig {
+    #[serde(default = "default_api_port")]
+    pub port: u16,
+    pub api_keys: Vec<ApiKeyConfig>,
+    #[serde(default)]
+    pub tls: TlsConfig,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ApiKeyConfig {
+    pub key: String,
+    pub name: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct TlsConfig {
+    #[serde(default)]
+    pub enabled: bool,
+    pub cert_path: Option<String>,
+    pub key_path: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SmtpListenerConfig {
+    #[serde(default = "default_true")]
+    pub enabled: bool,
+    #[serde(default = "default_smtp_port")]
+    pub port: u16,
+    #[serde(default = "default_true")]
+    pub require_auth: bool,
+    #[serde(default)]
+    pub tls_enabled: bool,
+}
+
+fn default_true() -> bool {
+    true
+}
+
+fn default_api_port() -> u16 {
+    8000
+}
+
+fn default_smtp_port() -> u16 {
+    25
 }
 
 pub fn load_config<P: AsRef<Path>>(path: P) -> Result<Config, Box<dyn std::error::Error>> {

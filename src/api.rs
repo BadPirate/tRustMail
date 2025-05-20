@@ -3,7 +3,9 @@ use crate::db;
 use crate::email::EmailSender;
 use axum::{
     extract::{Path, State},
-    http::StatusCode,
+    http::{Request, StatusCode, header},
+    middleware::{self, Next},
+    response::Response,
     routing::{get, post},
     Json, Router,
 };
@@ -43,15 +45,53 @@ pub struct StatusResponse {
 // Application state
 pub struct AppState {
     pub pool: PgPool,
-    // Keeping config for future endpoints that need configuration details
-    #[allow(dead_code)] 
     pub config: Config,
     pub email_sender: EmailSender,
 }
 
+// Authentication middleware
+async fn auth_middleware<B>(
+    State(state): State<Arc<AppState>>,
+    req: Request<B>, 
+    next: Next<B>
+) -> Result<Response, StatusCode> {
+    // Skip auth for health endpoint
+    if req.uri().path().contains("/health") {
+        return Ok(next.run(req).await);
+    }
+    
+    // Check for API key in header
+    let auth_header = req.headers()
+        .get(header::AUTHORIZATION)
+        .and_then(|header| header.to_str().ok());
+    
+    let api_key = match auth_header {
+        Some(header) => {
+            // Format should be "Bearer YOUR_API_KEY"
+            let parts: Vec<&str> = header.split_whitespace().collect();
+            if parts.len() == 2 && parts[0] == "Bearer" {
+                parts[1]
+            } else {
+                return Err(StatusCode::UNAUTHORIZED);
+            }
+        },
+        None => return Err(StatusCode::UNAUTHORIZED),
+    };
+    
+    // Validate the API key
+    let is_valid = state.config.api.api_keys.iter()
+        .any(|key_config| key_config.key == api_key);
+    
+    if is_valid {
+        Ok(next.run(req).await)
+    } else {
+        error!("Invalid API key provided");
+        Err(StatusCode::UNAUTHORIZED)
+    }
+}
+
 // Setup API routes
-pub fn setup_api(pool: PgPool, config: Config) -> Router {
-    let email_sender = EmailSender::new(pool.clone(), config.clone());
+pub fn setup_api(pool: PgPool, config: Config, email_sender: EmailSender) -> Router {
     let state = Arc::new(AppState {
         pool,
         config,
@@ -62,6 +102,7 @@ pub fn setup_api(pool: PgPool, config: Config) -> Router {
         .route("/api/email", post(send_email))
         .route("/api/email/:id", get(get_email_status))
         .route("/api/health", get(health_check))
+        .layer(middleware::from_fn_with_state(state.clone(), auth_middleware))
         .with_state(state)
 }
 
