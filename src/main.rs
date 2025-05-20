@@ -6,12 +6,10 @@ mod email;
 
 use api::setup_api;
 use auth::generate_keys_if_needed;
-use config::Config;
 use db::setup_database;
 use std::env;
 use std::net::SocketAddr;
-use tokio::net::TcpListener;
-use tracing::{info, warn, Level};
+use tracing::{info, Level};
 use tracing_subscriber::FmtSubscriber;
 
 #[tokio::main]

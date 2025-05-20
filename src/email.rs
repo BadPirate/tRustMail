@@ -18,6 +18,7 @@ use uuid::Uuid;
 pub struct EmailSender {
     pool: PgPool,
     config: Config,
+    #[allow(dead_code)]
     transport: AsyncSmtpTransport<lettre::Tokio1Executor>,
 }
 
@@ -154,7 +155,7 @@ impl EmailSender {
         let to = email.to_email.parse::<Mailbox>()?;
         
         // Build the email
-        let mut builder = MessageBuilder::new()
+        let builder = MessageBuilder::new()
             .from(from.clone())
             .to(to)
             .subject(&email.subject)

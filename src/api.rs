@@ -43,6 +43,8 @@ pub struct StatusResponse {
 // Application state
 pub struct AppState {
     pub pool: PgPool,
+    // Keeping config for future endpoints that need configuration details
+    #[allow(dead_code)] 
     pub config: Config,
     pub email_sender: EmailSender,
 }

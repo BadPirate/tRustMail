@@ -1,0 +1,29 @@
+{
+  "query": "\n        UPDATE emails\n        SET status = $1, updated_at = $2, sent_at = $3, error_message = $4\n        WHERE id = $5\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        {
+          "Custom": {
+            "name": "email_status",
+            "kind": {
+              "Enum": [
+                "pending",
+                "sending",
+                "sent",
+                "failed"
+              ]
+            }
+          }
+        },
+        "Timestamptz",
+        "Timestamptz",
+        "Text",
+        "Uuid"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "97b31cf6abba7401ac72550738a18a5c8ee1d211a5439c58dea9230be4187bb0"
+}

@@ -9,6 +9,7 @@ use tracing::info;
 use sha2::{Sha256, Digest};
 
 // DKIM signing functions
+#[allow(dead_code)]
 pub async fn sign_email_with_dkim(
     pool: &PgPool,
     message: &Message,
@@ -29,7 +30,7 @@ pub async fn sign_email_with_dkim(
     
     // Create DKIM signature header
     // This is a simplified implementation
-    let dkim_header = format!(
+    let _dkim_header = format!(
         "DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d={}; s={};\r\n\tt={}; bh={}; h=from:to:subject:date; b={}",
         domain_config.domain,
         domain_config.dkim_selector,

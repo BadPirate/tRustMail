@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::{postgres::PgPoolOptions, PgPool};
-use tracing::{error, info};
+use tracing::info;
 use uuid::Uuid;
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -92,6 +92,7 @@ pub async fn store_email(
     Ok(result.id)
 }
 
+#[allow(dead_code)]
 pub async fn update_email_status(
     pool: &PgPool,
     email_id: Uuid,
